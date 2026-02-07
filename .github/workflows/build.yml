@@ -66,4 +66,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: tweers-splitter-${{ matrix.platform }}-${{ strategy.job-index }}
-          path: src-tauri/target/*/release/bundle/**/*
+          path: |
+            src-tauri/target/release/bundle/**/*
+            src-tauri/target/*/release/bundle/**/*
