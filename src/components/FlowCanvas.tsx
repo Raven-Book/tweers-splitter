@@ -274,6 +274,7 @@ function FlowCanvasInner({ passages, groups, onAssign, onAddGroup, onHighlight }
         nodesDraggable={draggable}
         selectionOnDrag={false}
         fitView
+        proOptions={{ hideAttribution: true }}
       >
         <Background />
         <Controls showInteractive={false} />
