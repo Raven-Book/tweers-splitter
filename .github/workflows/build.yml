@@ -43,6 +43,10 @@ jobs:
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
 
+      - name: install x86_64 target (macos only)
+        if: contains(matrix.args, 'x86_64-apple-darwin')
+        run: rustup target add x86_64-apple-darwin
+
       - name: install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-22.04'
         run: |
@@ -56,9 +60,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: app-v__VERSION__
-          releaseName: 'App v__VERSION__'
-          releaseBody: 'See the assets to download this version and install.'
-          releaseDraft: true
-          prerelease: false
           args: ${{ matrix.args }}
+
+      - name: upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: tweers-splitter-${{ matrix.platform }}-${{ strategy.job-index }}
+          path: src-tauri/target/*/release/bundle/**/*
