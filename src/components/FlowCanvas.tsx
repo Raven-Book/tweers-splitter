@@ -158,11 +158,13 @@ function FlowCanvasInner({ passages, groups, onAssign, onAddGroup, onHighlight }
         nds.map((n) => {
           const w = n.measured?.width ?? 150;
           const h = n.measured?.height ?? 40;
-          const cx = n.position.x + w / 2;
-          const cy = n.position.y + h / 2;
+          const nl = n.position.x;
+          const nr = n.position.x + w;
+          const nt = n.position.y;
+          const nb = n.position.y + h;
           return {
             ...n,
-            selected: cx >= tl.x && cx <= br.x && cy >= tl.y && cy <= br.y,
+            selected: nl < br.x && nr > tl.x && nt < br.y && nb > tl.y,
           };
         })
       );
@@ -193,9 +195,11 @@ function FlowCanvasInner({ passages, groups, onAssign, onAddGroup, onHighlight }
           .filter((n) => {
             const w = n.measured?.width ?? 150;
             const h = n.measured?.height ?? 40;
-            const cx = n.position.x + w / 2;
-            const cy = n.position.y + h / 2;
-            return cx >= tl.x && cx <= br.x && cy >= tl.y && cy <= br.y;
+            const nl = n.position.x;
+            const nr = n.position.x + w;
+            const nt = n.position.y;
+            const nb = n.position.y + h;
+            return nl < br.x && nr > tl.x && nt < br.y && nb > tl.y;
           })
           .map((n) => n.id);
 
