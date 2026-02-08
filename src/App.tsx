@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { usePassages } from "./hooks/usePassages";
 import { useSplitGroups } from "./hooks/useSplitGroups";
@@ -37,6 +37,11 @@ function App() {
   const [tab, setTab] = useState<Tab>("split");
   const loaded = useRef(false);
 
+  const openFile = useCallback(async (path: string) => {
+    await loadFile(path);
+    setGroups([]);
+  }, [loadFile, setGroups]);
+
   // Load saved state on startup
   useEffect(() => {
     invoke<{ filePath: string | null; groups: import("./types").SplitGroup[] } | null>("load_state")
@@ -70,7 +75,7 @@ function App() {
         passages={passages}
         groups={groups}
         filePath={filePath}
-        onLoadFile={loadFile}
+        onLoadFile={openFile}
         onSetGroups={setGroups}
       />
       <div className="tab-bar">
