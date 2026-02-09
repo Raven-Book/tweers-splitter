@@ -6,8 +6,23 @@ function genId() {
   return String(nextId++);
 }
 
+function syncNextId(groups: SplitGroup[]) {
+  for (const g of groups) {
+    const n = parseInt(g.id, 10);
+    if (!isNaN(n) && n >= nextId) nextId = n + 1;
+  }
+}
+
 export function useSplitGroups() {
-  const [groups, setGroups] = useState<SplitGroup[]>([]);
+  const [groups, setGroupsRaw] = useState<SplitGroup[]>([]);
+
+  const setGroups: typeof setGroupsRaw = useCallback((action) => {
+    setGroupsRaw((prev) => {
+      const next = typeof action === "function" ? action(prev) : action;
+      syncNextId(next);
+      return next;
+    });
+  }, []);
 
   const addGroup = useCallback((): string => {
     const id = genId();
